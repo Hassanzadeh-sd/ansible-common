@@ -1,0 +1,22 @@
+# ansible-playbook install_terraform.yml --extra-vars "terraform_version=1.0.0"
+
+---
+- name: Install Terraform
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Download Terraform
+      get_url:
+        url: "https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip"
+        dest: "/tmp/terraform.zip"
+
+    - name: Unzip Terraform
+      unarchive:
+        src: "/tmp/terraform.zip"
+        dest: "/usr/local/bin/"
+        remote_src: yes
+
+    - name: Ensure Terraform is executable
+      file:
+        path: "/usr/local/bin/terraform"
+        mode: '0755'
